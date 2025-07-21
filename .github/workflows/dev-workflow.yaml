@@ -34,8 +34,8 @@ jobs:
       - name: setup-kosli-cli
         uses: kosli-dev/setup-cli-action@v2
       # Needs a github action for this
-      #- name: Update Flow
-      #  run: kosli create flow ${{ env.KOSLI_FLOW }} --template-file=kosli/trail.yaml 
+      - name: Update Flow
+        run: kosli create flow ${{ env.KOSLI_FLOW }} --use-empty-template
       #- name: Update policy
       #  run: ci/update-policy.sh
       - name: Kosli start trail
