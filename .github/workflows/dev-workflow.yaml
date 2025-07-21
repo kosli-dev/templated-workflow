@@ -43,10 +43,12 @@ jobs:
       - name: Get 8-character Git SHA Substring
         id: get_short_sha # Assign an ID to this step to reference its outputs
         uses: actions/github-script@v7 # Use the github-script action
+        env:
+          INPUT_SHA: ${{ github.sha }}
         with:
           script: |
             // Access the full Git SHA from the github context
-            const fullSha = github.sha;
+            const fullSha = core.getInput('INPUT_SHA');
             // Extract the first 8 characters
             const shortSha = fullSha.substring(0, 8);
             // Set the 'short_sha' as an output of this step
