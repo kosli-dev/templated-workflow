@@ -9,12 +9,9 @@ on:
         type: string
 
 env:
-  APP_NAME: ${{ github.event.repository.name }}
   BUILD_NUMBER: ${{ github.run_number }}
   GIT_REPO: ${{ github.repository }}
   GIT_REPO_URL: ${{ github.event.repository.clone_url }}
-  GIT_BRANCH: ${{ github.ref_name }}
-  GIT_COMMIT: ${{ github.sha }}
   IMAGE: ${{ github.repository_owner }}/${{ github.event.repository.name }}
   BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
   COMMIT_URL: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}
@@ -35,11 +32,11 @@ jobs:
         uses: kosli-dev/setup-cli-action@v2
       # Needs a github action for this
       - name: Update Flow
-        run: kosli create flow ${{ env.KOSLI_FLOW }} --use-empty-template
+        run: kosli create flow ${{ env.KOSLI_FLOW }} --visibility public --use-empty-template
       #- name: Update policy
       #  run: ci/update-policy.sh
       - name: Kosli start trail
-        run: kosli begin trail ${GIT_COMMIT} --description "build number ${BUILD_NUMBER}"
+        run: kosli begin trail ${{ github.sha }} --description "build number ${BUILD_NUMBER}"
       - name: Get 8-character Git SHA Substring
         id: get_short_sha # Assign an ID to this step to reference its outputs
         uses: actions/github-script@v7 # Use the github-script action
