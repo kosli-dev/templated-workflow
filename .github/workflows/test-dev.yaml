@@ -1,0 +1,12 @@
+name: Test Dev Workflow
+
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - main
+            - dev
+
+jobs:
+    test-dev-workflow:
+        uses: ./.github/workflows/dev-workflow.yaml
