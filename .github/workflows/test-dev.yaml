@@ -10,3 +10,4 @@ on:
 jobs:
     test-dev-workflow:
         uses: ./.github/workflows/dev-workflow.yaml
+        secrets: inherit
