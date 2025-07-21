@@ -48,7 +48,7 @@ jobs:
         with:
           script: |
             // Access the full Git SHA from the github context
-            const fullSha = core.getInput('INPUT_SHA');
+            const fullSha = core.getInput('SHA');
             // Extract the first 8 characters
             const shortSha = fullSha.substring(0, 8);
             // Set the 'short_sha' as an output of this step
