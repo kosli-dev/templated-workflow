@@ -92,7 +92,7 @@ jobs:
         name: code
         path: .
     - name: Build application
-      run: docker build -t "${{env.IMAGE}}:latest" -t "${{env.IMAGE}}:${{env.TAG}}" -f ${{ inputs.dockerfile-path }} .
+      run: docker build -t "ghcr.io/${{env.IMAGE}}:latest" -t "ghcr.io/${{env.IMAGE}}:${{env.TAG}}" -f ${{ inputs.dockerfile-path }} .
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v2
       with:
