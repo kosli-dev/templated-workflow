@@ -7,6 +7,11 @@ on:
         required: false
         default: 'Dockerfile'
         type: string
+      docker-build-path:
+        description: 'Build path for the Dockerfile.'
+        required: false
+        default: ''
+        type: string
 
 env:
   BUILD_NUMBER: ${{ github.run_number }}
@@ -57,6 +62,18 @@ jobs:
           name: code
           path: .
           include-hidden-files: true
+  Unit-tests:
+    runs-on: ubuntu-latest
+    needs: [Setup]
+    steps:
+      - name: Download test-report
+        uses: actions/download-artifact@v4
+        with:
+          name: test-results
+          path: .
+      - name: Attest unit tests
+        run: kosli attest generic --name test-report --attachments report.xml
+
   Linting:
     runs-on: ubuntu-latest
     needs: [Setup]
@@ -89,9 +106,9 @@ jobs:
         name: code
         path: .
     - name: Build application
-      run: docker build -t "ghcr.io/${{env.IMAGE}}:latest" -t "ghcr.io/${{env.IMAGE}}:${{env.TAG}}" -f ${{ inputs.dockerfile-path }} .
+      run: docker build -t "ghcr.io/${{env.IMAGE}}:latest" -t "ghcr.io/${{env.IMAGE}}:${{env.TAG}}" -f ${{ inputs.dockerfile-path }} ${{ inputs.docker-build-path }}
     - name: Login to GitHub Container Registry
-      uses: docker/login-action@v2
+      uses: docker/login-action@v3
       with:
         registry: ghcr.io
         username: ${{ github.repository_owner }}

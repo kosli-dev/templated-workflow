@@ -8,6 +8,19 @@ on:
             - dev
 
 jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+            - name: Run tests
+              run: echo "Running tests..." # Replace with actual test commands
+            - name: Upload test results
+              uses: actions/upload-artifact@v4
+              with:
+                name: test-results
+                path: report.xml
     test-dev-workflow:
+        needs: test
         uses: ./.github/workflows/dev-workflow.yaml
         secrets: inherit
