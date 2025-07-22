@@ -10,7 +10,7 @@ on:
       docker-build-path:
         description: 'Build path for the Dockerfile.'
         required: false
-        default: ''
+        default: '.'
         type: string
 
 env:
@@ -71,6 +71,8 @@ jobs:
         with:
           name: test-results
           path: .
+      - name: setup-kosli-cli
+        uses: kosli-dev/setup-cli-action@v2
       - name: Attest unit tests
         run: kosli attest generic --name test-report --attachments report.xml
 
