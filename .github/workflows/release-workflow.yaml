@@ -6,6 +6,7 @@ on:
             docker-image:
                 description: 'Docker image to use'
                 required: true
+                default: 'ghcr.io/kosli-dev/templated-workflow:efe3729b'
                 type: string
     workflow_call:
         inputs:
@@ -43,7 +44,7 @@ jobs:
               with:
                 script: |
                   const { execSync } = require('child_process');
-                  const fingerprint = execSync(`kosli fingerprint --artifact-type=docker $IMAGE`, { encoding: 'utf-8' });
+                  const fingerprint = execSync(`kosli fingerprint --artifact-type=docker $IMAGE`, { encoding: 'utf-8' }).split("\n")[0];
                   execSync(`kosli search ${fingerprint} -o json > data.json`, { encoding: 'utf-8' });
                   const trail = execSync(`jq -r '.artifacts[0].trail' < data.json`, { encoding: 'utf-8' });
                   execSync(`kosli get trail -o json ${fingerprint} > trail.json`, { encoding: 'utf-8' });
