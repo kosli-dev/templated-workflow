@@ -32,7 +32,7 @@ jobs:
               with:
                 script: |
                   const { execSync } = require('child_process');
-                  const fingerprint = execSync(`kosli fingerprint --artifact-type=docker ${IMAGE}`, { encoding: 'utf-8' });
+                  const fingerprint = execSync(`kosli fingerprint --artifact-type=docker $IMAGE`, { encoding: 'utf-8' });
                   execSync(`kosli search ${fingerprint} -o json > data.json`, { encoding: 'utf-8' });
                   const trail = execSync(`jq -r '.artifacts[0].trail' < data.json`, { encoding: 'utf-8' });
                   execSync(`kosli get trail -o json ${fingerprint} > trail.json`, { encoding: 'utf-8' });
