@@ -1,29 +1,7 @@
-const fs = require('fs')
-const path = require('path')
+import fs from 'fs'
+import path from 'path'
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-
-/**
- * Parses command-line arguments and validates their count.
- * @returns {object} An object containing jsonFilePath and statusToFind.
- * @throws {Error} If the incorrect number of arguments is provided.
- */
-function parseArguments() {
-  const args = process.argv.slice(2)
-
-  if (args.length !== 2) {
-    console.log(
-      'Usage: node checkAttestations.js <json_file_path> <status_to_look_for>'
-    )
-    console.log('Example: node checkAttestations.js data.json MISSING')
-    process.exit(1) // Exit with a non-zero code indicating incorrect usage
-  }
-
-  return {
-    jsonFilePath: args[0],
-    statusToFind: args[1]
-  }
-}
 
 /**
  * Reads and parses a JSON file.
@@ -118,9 +96,11 @@ function printResults(attestations, statusToFind) {
  */
 export async function run() {
   try {
-    const jsonData = core.getInput('json_file_path', { required: true })
+    const jsonFilePath = core.getInput('json_file_path', { required: true })
     const statusToFind = core.getInput('status_to_find', { required: true })
     core.info(`Searching for attestations with status: ${statusToFind}`)
+
+    const jsonData = readJsonFile(jsonFilePath)
     const foundAttestations = findAttestationsByStatus(jsonData, statusToFind)
     printResults(foundAttestations, statusToFind)
   } catch (error) {
