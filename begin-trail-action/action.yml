@@ -4,8 +4,6 @@ description:
   parameters.
 author: Kosli Dev Team
 
-
-
 # Define your inputs here.
 inputs:
   build_id:
@@ -15,14 +13,14 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: setup-kosli-cli
-      uses: kosli-dev/setup-cli-action@v2
+    
     - name: Set GitHub Path
       run: echo "$GITHUB_ACTION_PATH" >> $GITHUB_PATH
       shell: bash
       env:
         GITHUB_ACTION_PATH: ${{ github.action_path }}
-
+    - run: tree
+      shell: bash
     - name: run begin trail
-      run: kosli begin trail ${{ github.sha }} --description "build number ${BUILD_NUMBER}" --template-file flow.yaml
+      run: kosli begin trail ${{ github.sha }} --description "build number ${BUILD_NUMBER}" --template-file $GITHUB_ACTION_PATH/flow.yaml
       shell: bash
