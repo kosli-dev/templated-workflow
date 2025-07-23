@@ -15,5 +15,20 @@ inputs:
     required: true
 
 runs:
-  using: node20
-  main: dist/index.js
+  using: "composite"
+  steps:
+    - name: Check if JSON file exists
+      run: |
+        if [ ! -f ${{ inputs.json_file_path }} ]; then
+          echo "Error: JSON file not found at ${{ inputs.json_file_path }}"
+          exit 1
+        fi
+    - name: Set GitHub Path
+      run: echo "$GITHUB_ACTION_PATH" >> $GITHUB_PATH
+      shell: bash
+      env:
+        GITHUB_ACTION_PATH: ${{ github.action_path }}
+
+    - name: run check-template-complete-action
+      run: check-template-complete.sh ${{ inputs.json_file_path }} ${{ inputs.status_to_find }}
+      shell: bash
