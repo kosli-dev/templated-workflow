@@ -43,7 +43,7 @@ jobs:
       - name: Kosli start trail
         uses: ./begin-trail-action
         with:
-          build_id: ${{ env}}
+          build_id: ${{ env.BUILD_NUMBER}}
       - name: Get 8-character Git SHA Substring
         id: get_short_sha # Assign an ID to this step to reference its outputs
         uses: actions/github-script@v7 # Use the github-script action
