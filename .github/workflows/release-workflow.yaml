@@ -52,3 +52,8 @@ jobs:
                   execSync(`kosli get trail -o json ${trail} > trail.json`, { encoding: 'utf-8' });
             - name: check trail complete
               run: bash check-template-complete.sh trail.json MISSING
+            - name: Kosli complete action
+              uses: ./template-complete-action
+              with:
+                json_file_path: trail.json
+                status_to_find: MISSING
