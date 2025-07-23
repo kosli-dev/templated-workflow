@@ -1,0 +1,119 @@
+const fs = require('fs');
+const path = require('path');
+import * as core from '@actions/core'
+import * as github from '@actions/github'
+
+/**
+ * Parses command-line arguments and validates their count.
+ * @returns {object} An object containing jsonFilePath and statusToFind.
+ * @throws {Error} If the incorrect number of arguments is provided.
+ */
+function parseArguments() {
+  const args = process.argv.slice(2);
+
+  if (args.length !== 2) {
+    console.log('Usage: node checkAttestations.js <json_file_path> <status_to_look_for>');
+    console.log('Example: node checkAttestations.js data.json MISSING');
+    process.exit(1); // Exit with a non-zero code indicating incorrect usage
+  }
+
+  return {
+    jsonFilePath: args[0],
+    statusToFind: args[1]
+  };
+}
+
+/**
+ * Reads and parses a JSON file.
+ * @param {string} filePath The path to the JSON file.
+ * @returns {object} The parsed JSON data.
+ * @throws {Error} If the file is not found or cannot be parsed.
+ */
+function readJsonFile(filePath) {
+  if (!fs.existsSync(filePath)) {
+    throw new Error(`JSON file '${filePath}' not found.`);
+  }
+
+  try {
+    const fileContent = fs.readFileSync(filePath, 'utf8');
+    return JSON.parse(fileContent);
+  } catch (error) {
+    throw new Error(`Error reading or parsing JSON file: ${error.message}`);
+  }
+}
+
+/**
+ * Finds attestations with a specific status within the JSON data structure.
+ * This function recursively traverses the object to find all relevant attestations.
+ * @param {object} data The JSON data object to search within.
+ * @param {string} targetStatus The status string to search for (e.g., "MISSING", "COMPLETE").
+ * @returns {string[]} An array of attestation names that match the target status.
+ */
+function findAttestationsByStatus(data, targetStatus) {
+  const foundAttestations = [];
+
+  // Helper function to process an array of attestation statuses
+  const processAttestationArray = (attestationArray) => {
+    if (Array.isArray(attestationArray)) {
+      attestationArray.forEach(attestation => {
+        if (attestation && attestation.status === targetStatus && attestation.attestation_name) {
+          foundAttestations.push(attestation.attestation_name);
+        }
+      });
+    }
+  };
+
+  // Check for attestations directly under compliance_status
+  if (data && data.compliance_status) {
+    processAttestationArray(data.compliance_status.attestations_statuses);
+
+    // Check for attestations nested under artifacts_statuses
+    if (data.compliance_status.artifacts_statuses) {
+      const artifactsStatuses = data.compliance_status.artifacts_statuses;
+      for (const key in artifactsStatuses) {
+        if (Object.prototype.hasOwnProperty.call(artifactsStatuses, key) && typeof artifactsStatuses[key] === 'object') {
+          const artifact = artifactsStatuses[key];
+          processAttestationArray(artifact.attestations_statuses);
+        }
+      }
+    }
+  }
+
+  return foundAttestations;
+}
+
+/**
+ * Prints the results of the attestation search to the console.
+ * @param {string[]} attestations An array of attestation names found.
+ * @param {string} statusToFind The status string that was searched for.
+ */
+function printResults(attestations, statusToFind) {
+  if (attestations.length > 0) {
+    console.log(`The following attestations have a '${statusToFind}' status:`);
+    attestations.forEach(attestation => {
+      console.log(`- ${attestation}`);
+    });
+    process.exit(1); // Exit with a non-zero code if attestations were found
+  } else {
+    console.log(`No attestations found with '${statusToFind}' status.`);
+    process.exit(0); // Exit with a zero code if no attestations were found
+  }
+}
+
+/**
+ * Main function to orchestrate the attestation checking process.
+ */
+function main() {
+  try {
+    const { jsonFilePath, statusToFind } = parseArguments();
+    const jsonData = readJsonFile(jsonFilePath);
+    const foundAttestations = findAttestationsByStatus(jsonData, statusToFind);
+    printResults(foundAttestations, statusToFind);
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+    process.exit(1); // Exit with a non-zero code for any unhandled errors
+  }
+}
+
+// Execute the main function when the script is run
+main();
