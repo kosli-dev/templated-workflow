@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require('fs')
+const path = require('path')
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 
@@ -9,18 +9,20 @@ import * as github from '@actions/github'
  * @throws {Error} If the incorrect number of arguments is provided.
  */
 function parseArguments() {
-  const args = process.argv.slice(2);
+  const args = process.argv.slice(2)
 
   if (args.length !== 2) {
-    console.log('Usage: node checkAttestations.js <json_file_path> <status_to_look_for>');
-    console.log('Example: node checkAttestations.js data.json MISSING');
-    process.exit(1); // Exit with a non-zero code indicating incorrect usage
+    console.log(
+      'Usage: node checkAttestations.js <json_file_path> <status_to_look_for>'
+    )
+    console.log('Example: node checkAttestations.js data.json MISSING')
+    process.exit(1) // Exit with a non-zero code indicating incorrect usage
   }
 
   return {
     jsonFilePath: args[0],
     statusToFind: args[1]
-  };
+  }
 }
 
 /**
@@ -31,14 +33,14 @@ function parseArguments() {
  */
 function readJsonFile(filePath) {
   if (!fs.existsSync(filePath)) {
-    throw new Error(`JSON file '${filePath}' not found.`);
+    throw new Error(`JSON file '${filePath}' not found.`)
   }
 
   try {
-    const fileContent = fs.readFileSync(filePath, 'utf8');
-    return JSON.parse(fileContent);
+    const fileContent = fs.readFileSync(filePath, 'utf8')
+    return JSON.parse(fileContent)
   } catch (error) {
-    throw new Error(`Error reading or parsing JSON file: ${error.message}`);
+    throw new Error(`Error reading or parsing JSON file: ${error.message}`)
   }
 }
 
@@ -50,36 +52,43 @@ function readJsonFile(filePath) {
  * @returns {string[]} An array of attestation names that match the target status.
  */
 function findAttestationsByStatus(data, targetStatus) {
-  const foundAttestations = [];
+  const foundAttestations = []
 
   // Helper function to process an array of attestation statuses
   const processAttestationArray = (attestationArray) => {
     if (Array.isArray(attestationArray)) {
-      attestationArray.forEach(attestation => {
-        if (attestation && attestation.status === targetStatus && attestation.attestation_name) {
-          foundAttestations.push(attestation.attestation_name);
+      attestationArray.forEach((attestation) => {
+        if (
+          attestation &&
+          attestation.status === targetStatus &&
+          attestation.attestation_name
+        ) {
+          foundAttestations.push(attestation.attestation_name)
         }
-      });
+      })
     }
-  };
+  }
 
   // Check for attestations directly under compliance_status
   if (data && data.compliance_status) {
-    processAttestationArray(data.compliance_status.attestations_statuses);
+    processAttestationArray(data.compliance_status.attestations_statuses)
 
     // Check for attestations nested under artifacts_statuses
     if (data.compliance_status.artifacts_statuses) {
-      const artifactsStatuses = data.compliance_status.artifacts_statuses;
+      const artifactsStatuses = data.compliance_status.artifacts_statuses
       for (const key in artifactsStatuses) {
-        if (Object.prototype.hasOwnProperty.call(artifactsStatuses, key) && typeof artifactsStatuses[key] === 'object') {
-          const artifact = artifactsStatuses[key];
-          processAttestationArray(artifact.attestations_statuses);
+        if (
+          Object.prototype.hasOwnProperty.call(artifactsStatuses, key) &&
+          typeof artifactsStatuses[key] === 'object'
+        ) {
+          const artifact = artifactsStatuses[key]
+          processAttestationArray(artifact.attestations_statuses)
         }
       }
     }
   }
 
-  return foundAttestations;
+  return foundAttestations
 }
 
 /**
@@ -89,16 +98,18 @@ function findAttestationsByStatus(data, targetStatus) {
  */
 function printResults(attestations, statusToFind) {
   if (attestations.length > 0) {
-    core.setFailed(`Found ${attestations.length} attestations with status '${statusToFind}'.`);
+    core.setFailed(
+      `Found ${attestations.length} attestations with status '${statusToFind}'.`
+    )
 
-    core.info(`The following attestations have a '${statusToFind}' status:`);
-    attestations.forEach(attestation => {
-      core.info(`- ${attestation}`);
-    });
-    process.exit(1); // Exit with a non-zero code if attestations were found
+    core.info(`The following attestations have a '${statusToFind}' status:`)
+    attestations.forEach((attestation) => {
+      core.info(`- ${attestation}`)
+    })
+    process.exit(1) // Exit with a non-zero code if attestations were found
   } else {
-    core.info(`No attestations found with '${statusToFind}' status.`);
-    process.exit(0); // Exit with a zero code if no attestations were found
+    core.info(`No attestations found with '${statusToFind}' status.`)
+    process.exit(0) // Exit with a zero code if no attestations were found
   }
 }
 /**
@@ -106,16 +117,14 @@ function printResults(attestations, statusToFind) {
  * @returns {Promise<void>} Resolves when the action is complete.
  */
 export async function run() {
-
-    try {
-      const jsonData = core.getInput('json_file_path', { required: true });
-      const statusToFind = core.getInput('status_to_find', { required: true });
-      core.info(`Searching for attestations with status: ${statusToFind}`);
-      const foundAttestations = findAttestationsByStatus(jsonData, statusToFind);
-      printResults(foundAttestations, statusToFind);
-    } catch (error) {
-      core.error(`Error: ${error.message}`);
-      process.exit(1); // Exit with a non-zero code for any unhandled errors
+  try {
+    const jsonData = core.getInput('json_file_path', { required: true })
+    const statusToFind = core.getInput('status_to_find', { required: true })
+    core.info(`Searching for attestations with status: ${statusToFind}`)
+    const foundAttestations = findAttestationsByStatus(jsonData, statusToFind)
+    printResults(foundAttestations, statusToFind)
+  } catch (error) {
+    core.error(`Error: ${error.message}`)
+    process.exit(1) // Exit with a non-zero code for any unhandled errors
   }
-
 }

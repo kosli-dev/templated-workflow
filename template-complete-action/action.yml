@@ -1,5 +1,7 @@
 name: Kosli Complete Action
-description: This action checks if a Kosli trail is complete by looking for attestations with a specific status.
+description:
+  This action checks if a Kosli trail is complete by looking for attestations
+  with a specific status.
 author: Kosli Dev Team
 
 # Define your inputs here.
@@ -8,7 +10,8 @@ inputs:
     description: The path to the JSON file containing the trail data.
     required: true
   status_to_find:
-    description: The status to look for in the attestations (e.g., "MISSING", "COMPLETE").
+    description:
+      The status to look for in the attestations (e.g., "MISSING", "COMPLETE").
     required: true
 
 runs:
