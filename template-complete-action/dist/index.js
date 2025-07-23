@@ -1,7 +1,7 @@
-import require$$0 from 'os';
-import require$$0$1 from 'crypto';
 import require$$1 from 'fs';
 import require$$1$5 from 'path';
+import require$$0 from 'os';
+import require$$0$1 from 'crypto';
 import require$$2$1 from 'http';
 import require$$3$1 from 'https';
 import require$$0$4 from 'net';
@@ -31220,8 +31220,24 @@ function requireGithub () {
 
 requireGithub();
 
-require('fs');
-require('path');
+/**
+ * Reads and parses a JSON file.
+ * @param {string} filePath The path to the JSON file.
+ * @returns {object} The parsed JSON data.
+ * @throws {Error} If the file is not found or cannot be parsed.
+ */
+function readJsonFile(filePath) {
+  if (!require$$1.existsSync(filePath)) {
+    throw new Error(`JSON file '${filePath}' not found.`)
+  }
+
+  try {
+    const fileContent = require$$1.readFileSync(filePath, 'utf8');
+    return JSON.parse(fileContent)
+  } catch (error) {
+    throw new Error(`Error reading or parsing JSON file: ${error.message}`)
+  }
+}
 
 /**
  * Finds attestations with a specific status within the JSON data structure.
@@ -31297,9 +31313,11 @@ function printResults(attestations, statusToFind) {
  */
 async function run() {
   try {
-    const jsonData = coreExports.getInput('json_file_path', { required: true });
+    const jsonFilePath = coreExports.getInput('json_file_path', { required: true });
     const statusToFind = coreExports.getInput('status_to_find', { required: true });
     coreExports.info(`Searching for attestations with status: ${statusToFind}`);
+
+    const jsonData = readJsonFile(jsonFilePath);
     const foundAttestations = findAttestationsByStatus(jsonData, statusToFind);
     printResults(foundAttestations, statusToFind);
   } catch (error) {
