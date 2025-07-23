@@ -26,33 +26,38 @@ if [ ! -f "$json_file" ]; then
 fi
 
 # Read the JSON data from the file
-# Using 'cat "$json_file"' to read the content of the file
 json_data=$(cat "$json_file")
 
-# JQ query to extract attestation name and status
-# We use -r to output raw strings and @tsv to format as tab-separated values
-# This makes it easier to parse in bash.
-# The query now filters for the specific status provided as an argument.
-jq_query='
-(
-  .compliance_status.attestations_statuses[]?, # Attestations directly under compliance_status
-  .compliance_status.artifacts_statuses | to_entries[]?.value | select(type == "object") | .attestations_statuses[]? # Attestations nested under artifacts
-)
+# Initialize an empty array to store attestations with the specified status
+found_attestations=()
+
+# JQ query for attestations directly under .compliance_status.attestations_statuses
+jq_query_direct='
+.compliance_status.attestations_statuses[]?
 | select(.status == "'"$status_to_find"'")
 | [.attestation_name, .status]
 | @tsv
 '
 
-# Initialize an empty array to store attestations with the specified status
-found_attestations=()
-
-# Execute the jq command and loop through the output
-# IFS=$'\t' sets the Internal Field Separator to tab for parsing TSV
-# -r option for read prevents backslash escapes from being interpreted
+# Execute the jq command for direct attestations and loop through the output
 while IFS=$'\t' read -r name status; do
-  # Add the attestation name to the array if it matches the status
   found_attestations+=("$name")
-done < <(echo "$json_data" | jq -r "$jq_query")
+done < <(echo "$json_data" | jq -r "$jq_query_direct")
+
+# JQ query for attestations nested under .compliance_status.artifacts_statuses
+jq_query_nested='
+.compliance_status.artifacts_statuses | to_entries[]?.value
+| select(type == "object")
+| .attestations_statuses[]?
+| select(.status == "'"$status_to_find"'")
+| [.attestation_name, .status]
+| @tsv
+'
+
+# Execute the jq command for nested attestations and loop through the output
+while IFS=$'\t' read -r name status; do
+  found_attestations+=("$name")
+done < <(echo "$json_data" | jq -r "$jq_query_nested")
 
 # Check if any attestations with the specified status were found
 if [ ${#found_attestations[@]} -gt 0 ]; then
