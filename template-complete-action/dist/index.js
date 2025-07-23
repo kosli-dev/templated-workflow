@@ -31228,14 +31228,14 @@ requireGithub();
  */
 function readJsonFile(filePath) {
   if (!require$$1.existsSync(filePath)) {
-    throw new Error(`JSON file '${filePath}' not found.`)
+    coreExports.setFailed(`JSON file '${filePath}' not found.`);
   }
 
   try {
     const fileContent = require$$1.readFileSync(filePath, 'utf8');
     return JSON.parse(fileContent)
   } catch (error) {
-    throw new Error(`Error reading or parsing JSON file: ${error.message}`)
+    coreExports.setFailed(`Error reading or parsing JSON file: ${error.message}`);
   }
 }
 

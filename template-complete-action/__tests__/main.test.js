@@ -13,7 +13,8 @@ const main = await import('../src/main')
 describe('action', () => {
   beforeEach(() => {
     // Mock the action's inputs
-    core.getInput.mockReturnValueOnce('World')
+    // core.getInput.mockReturnValueOnce('trail.json')
+    // core.getInput.mockReturnValueOnce('MISSING')
 
     // Mock the action's payload
     github.context.payload = {
@@ -24,29 +25,38 @@ describe('action', () => {
   afterEach(() => {
     jest.resetAllMocks()
   })
-
-  it('sets the time output', async () => {
-    await main.run()
-
-    expect(core.setOutput).toHaveBeenCalledWith('time', expect.any(String))
-  })
-
-  it('logs the event payload', async () => {
-    await main.run()
-
-    expect(core.info).toHaveBeenCalledWith(
-      `The event payload: ${JSON.stringify(github.context.payload, null, 2)}`
-    )
-  })
-
-  it('sets a failed status', async () => {
-    // Mock a failure
-    core.getInput.mockReset().mockImplementation((name) => {
-      throw new Error('Something went wrong...')
+  it('calls printResults with found attestations when attestations are found', async () => {
+    // Arrange
+    // Read mock JSON from trail.json fixture file
+    const fs = await import('fs')
+    const path = await import('path')
+    const trailJsonPath = path.resolve('./__tests__/success-trail.json')
+    const mockJson = JSON.parse(fs.readFileSync(trailJsonPath, 'utf-8'))
+    // Mock fs and JSON reading
+    jest.unstable_mockModule('fs', () => ({
+      existsSync: () => true,
+      readFileSync: () => JSON.stringify(mockJson)
+    }))
+    const mainWithMockedFs = await import('../src/main')
+    // Mock inputs
+    core.getInput.mockImplementation((name) => {
+      if (name === 'json_file_path') return 'trail.json'
+      if (name === 'status_to_find') return 'MISSING'
     })
-
-    await main.run()
-
-    expect(core.setFailed).toHaveBeenCalledWith('Something went wrong...')
+    // Spy on process.exit and core.info
+    const exitSpy = jest.spyOn(process, 'exit').mockImplementation(() => {})
+    const infoSpy = jest.spyOn(core, 'info')
+    const setFailedSpy = jest.spyOn(core, 'setFailed')
+    // Act
+    await mainWithMockedFs.run()
+    expect(infoSpy).toHaveBeenCalledWith(
+      'Searching for attestations with status: MISSING'
+    )
+    console.log(setFailedSpy.mock.calls)
+    expect(infoSpy).toHaveBeenCalledWith(
+      "No attestations found with 'MISSING' status."
+    )
+    expect(exitSpy).toHaveBeenCalledWith(0)
+    exitSpy.mockRestore()
   })
 })

@@ -11,14 +11,14 @@ import * as github from '@actions/github'
  */
 function readJsonFile(filePath) {
   if (!fs.existsSync(filePath)) {
-    throw new Error(`JSON file '${filePath}' not found.`)
+    core.setFailed(`JSON file '${filePath}' not found.`)
   }
 
   try {
     const fileContent = fs.readFileSync(filePath, 'utf8')
     return JSON.parse(fileContent)
   } catch (error) {
-    throw new Error(`Error reading or parsing JSON file: ${error.message}`)
+    core.setFailed(`Error reading or parsing JSON file: ${error.message}`)
   }
 }
 
