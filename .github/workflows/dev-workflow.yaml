@@ -41,7 +41,9 @@ jobs:
       #- name: Update policy
       #  run: ci/update-policy.sh
       - name: Kosli start trail
-        run: kosli begin trail ${{ github.sha }} --description "build number ${BUILD_NUMBER}"
+        uses: ./begin-trail-action
+        with:
+          build_id: ${{ env}}
       - name: Get 8-character Git SHA Substring
         id: get_short_sha # Assign an ID to this step to reference its outputs
         uses: actions/github-script@v7 # Use the github-script action

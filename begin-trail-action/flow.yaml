@@ -1,0 +1,10 @@
+version: 1
+trail:
+  artifacts:
+    - name: container
+  attestations:
+  - name: sbom
+    type: generic
+  - name: unit-tests
+    type: generic
+
