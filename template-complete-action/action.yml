@@ -23,6 +23,7 @@ runs:
           echo "Error: JSON file not found at ${{ inputs.json_file_path }}"
           exit 1
         fi
+      shell: bash
     - name: Set GitHub Path
       run: echo "$GITHUB_ACTION_PATH" >> $GITHUB_PATH
       shell: bash
