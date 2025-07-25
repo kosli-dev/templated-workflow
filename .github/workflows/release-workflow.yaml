@@ -32,8 +32,8 @@ jobs:
         steps:
             - name: echo release
               run: echo "Releasing ${{ inputs.docker-image }}"
-            - name: Clone down repository
-              uses: actions/checkout@v4
+            # - name: Clone down repository
+            #   uses: actions/checkout@v4
             - name: setup-kosli-cli
               uses: kosli-dev/setup-cli-action@v2
             - name: Download container image
@@ -54,7 +54,7 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                 name: kosli-trail
-                path: trail.json
+                path: .
             - name: Kosli complete action
               uses: ./template-complete-action
               with:
