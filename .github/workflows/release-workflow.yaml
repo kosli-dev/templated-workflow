@@ -52,8 +52,8 @@ jobs:
                   console.log(`Data file created: data.json`);
                   const trail = execSync(`jq -r '.artifacts[0].trail' < data.json`, { encoding: 'utf-8' });
                   console.log(`Trail: ${trail}`);
-                  execSync(`kosli get trail -o json ${trail}`, { encoding: 'utf-8' });
-                  execSync(`kosli get trail -o json ${trail} > trail.json`, { encoding: 'utf-8' });
+                  execSync(`kosli get trail -o json ${trail}`, { encoding: 'utf-8', stdio: 'inherit' });
+                  execSync(`kosli get trail -o json ${trail} > trail.json`, { encoding: 'utf-8', stdio: 'inherit' });
             - name: Archive trail
               uses: actions/upload-artifact@v4
               with:
