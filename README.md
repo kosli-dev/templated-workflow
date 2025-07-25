@@ -2,6 +2,15 @@
 
 An opinionated, reusable GitHub Actions workflow that provides automated CI/CD with compliance tracking using Kosli. This workflow handles Docker image building, security scanning, linting, and artifact attestation out of the box.
 
+## Custom Actions
+
+This repository includes two custom GitHub Actions for Kosli integration:
+
+- [Begin Trail Action](./begin-trail-action/README.md): Starts a Kosli trail for your workflow.
+- [Check Template Complete Action](./template-complete-action/README.md): Checks if all required attestations in a Kosli trail are complete.
+
+See each action's README for usage and details.
+
 ## Features
 
 - 🐳 **Docker Image Building**: Automatically builds and pushes container images to GitHub Container Registry
