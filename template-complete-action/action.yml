@@ -17,12 +17,8 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Check if JSON file exists
-      run: |
-        if [ ! -f ${{ inputs.json_file_path }} ]; then
-          echo "Error: JSON file not found at ${{ inputs.json_file_path }}"
-          exit 1
-        fi
+    - name: cat json file
+      run: cat ${{ inputs.json_file_path }}
       shell: bash
     - name: Set GitHub Path
       run: echo "$GITHUB_ACTION_PATH" >> $GITHUB_PATH

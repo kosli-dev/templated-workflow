@@ -32,8 +32,8 @@ jobs:
         steps:
             - name: echo release
               run: echo "Releasing ${{ inputs.docker-image }}"
-            # - name: Clone down repository
-            #   uses: actions/checkout@v4
+            - name: Clone down repository
+              uses: actions/checkout@v4
             - name: setup-kosli-cli
               uses: kosli-dev/setup-cli-action@v2
             - name: Download container image
@@ -52,6 +52,7 @@ jobs:
                   console.log(`Data file created: data.json`);
                   const trail = execSync(`jq -r '.artifacts[0].trail' < data.json`, { encoding: 'utf-8' });
                   console.log(`Trail: ${trail}`);
+                  execSync(`kosli get trail -o json ${trail}`, { encoding: 'utf-8' });
                   execSync(`kosli get trail -o json ${trail} > trail.json`, { encoding: 'utf-8' });
             - name: Archive trail
               uses: actions/upload-artifact@v4
