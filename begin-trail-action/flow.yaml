@@ -6,6 +6,6 @@ trail:
       - name: sbom
         type: generic
   attestations:
-  - name: test-reports
+  - name: test-report
     type: generic
 
