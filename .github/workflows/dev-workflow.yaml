@@ -35,11 +35,6 @@ jobs:
         uses: actions/checkout@v4       
       - name: setup-kosli-cli
         uses: kosli-dev/setup-cli-action@v2
-      # Needs a github action for this
-      # - name: Update Flow
-      #   run: kosli create flow ${{ env.KOSLI_FLOW }} --visibility public --use-empty-template
-      #- name: Update policy
-      #  run: ci/update-policy.sh
       - name: Kosli start trail
         uses: ./begin-trail-action
         with:
