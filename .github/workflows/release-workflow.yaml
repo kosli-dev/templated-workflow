@@ -32,22 +32,21 @@ jobs:
         steps:
             - name: echo release
               run: echo "Releasing ${{ inputs.docker-image }}"
+              
             - name: Clone down repository
               uses: actions/checkout@v4
+
             - name: setup-kosli-cli
               uses: kosli-dev/setup-cli-action@v2
+
             - name: Download container image
               run: docker pull ${{ inputs.docker-image }}
+
             - name: Get trail from Kosli
               env:
                 IMAGE: ${{ inputs.docker-image }}
-              id: get_trail # Assign an ID to this step to reference its outputs
               run: node scripts/get-trail.js
-            - name: Archive trail
-              uses: actions/upload-artifact@v4
-              with:
-                name: kosli-trail
-                path: .
+
             - name: Kosli complete action
               uses: ./template-complete-action
               with:
