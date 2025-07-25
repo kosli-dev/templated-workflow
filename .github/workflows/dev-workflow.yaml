@@ -130,7 +130,7 @@ jobs:
         output-file: 'sbom.spdx.json'
         upload-artifact: false
     - name: Attest SBOM
-      run: kosli attest generic --name container-sbom --attachments  sbom.spdx.json
+      run: kosli attest generic --name container.sbom --attachments  sbom.spdx.json
 
   Security-scan:
     runs-on: ubuntu-latest
