@@ -1,0 +1,19 @@
+{
+  "name": "template-complete-action_js",
+  "version": "1.0.0",
+  "description": "This custom GitHub Action checks if all required attestations in a Kosli trail are complete by parsing a JSON status file.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "jest": "^30.0.5",
+    "ts-jest": "^29.4.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  }
+}

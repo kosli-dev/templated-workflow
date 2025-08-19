@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "es2016", // Or a newer version like "es2020" or "esnext"
+    "module": "commonjs", // CommonJS is typical for Node.js applications
+    "outDir": "./dist", // Where compiled JavaScript files will go
+    "strict": true, // Enable all strict type-checking options (best practice!)
+    "esModuleInterop": true, // Allows default imports from modules with no default export
+    "skipLibCheck": true, // Skip type checking of declaration files
+    "forceConsistentCasingInFileNames": true // Ensure consistent file casing
+  }
+}

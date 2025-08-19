@@ -1,0 +1,13 @@
+{
+    "name": "example",
+    "age": 30,
+    "isActive": true,
+    "items": [ "item1", "item2"
+    "address": {
+        "city": "New York",
+        "zip": 10001,
+        "country": "USA"
+    }
+    "missingComma": "value"
+    "extraQuote": "oops"
+}
