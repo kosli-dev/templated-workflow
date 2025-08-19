@@ -16,5 +16,5 @@ inputs:
 
 runs:
   using: "node20"
-  main: dist/check-template-complete.js
+  main: entrypoint.js
   
