@@ -74,16 +74,16 @@ describe('findAttestations (mocked fs)', () => {
 
     test('should throw an error if the file content is not valid JSON', () => {
         (fs.readFileSync as jest.Mock).mockReturnValueOnce('{');
-        expect(() => findAttestations('malformed.json', 'MISSING'))
+        expect(() => findAttestations('test-files/malformed.json', 'MISSING'))
             .toThrow(Error);
     });
 
     test('should find no MISSING attestations in the compliant trail file', () => {
         const realFs = jest.requireActual('fs');
         (fs.readFileSync as jest.Mock).mockReturnValueOnce(
-            realFs.readFileSync('trail-compliant.json', 'utf-8')
+            realFs.readFileSync('test-files/trail-compliant.json', 'utf-8')
         );
-        const found = findAttestations('trail-compliant.json', 'MISSING');
+        const found = findAttestations('test-files/trail-compliant.json', 'MISSING');
         expect(found).toEqual([]);
     });
 });
@@ -94,7 +94,7 @@ describe('findAttestations (real file)', () => {
     jest.resetModules();
     jest.unmock('fs');
     const { findAttestations: findAttestationsReal } = require('./check-template-complete');
-    const found = findAttestationsReal('/home/sofus/git/kosli/templated-workflow/template-complete-action_js/trail-non-compliant.json', 'MISSING');
+    const found = findAttestationsReal('/home/sofus/git/kosli/templated-workflow/template-complete-action_js/test-files/trail-non-compliant.json', 'MISSING');
         expect(found).toEqual([
             "test-reports"
         ]);
