@@ -85,6 +85,54 @@
           "store_path": "/nix/store/lz7iav1hd92jbv44zf2rdd7b2mj23536-nodejs-20.19.3"
         }
       }
+    },
+    "typescript@5.8.3": {
+      "last_modified": "2025-07-18T03:30:42Z",
+      "resolved": "github:NixOS/nixpkgs/e821e03193486359aa942372be2d9c1f377b7a18#typescript",
+      "source": "devbox-search",
+      "version": "5.8.3",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/50cqj24p4i83xfr3iamiqlgl12cc0nd2-typescript-5.8.3",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/50cqj24p4i83xfr3iamiqlgl12cc0nd2-typescript-5.8.3"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/ahh9q43kwi0xkb2d0dkfn4j765z779rp-typescript-5.8.3",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/ahh9q43kwi0xkb2d0dkfn4j765z779rp-typescript-5.8.3"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/ghj8sdhgv419g9cnm7xgk45if624630s-typescript-5.8.3",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/ghj8sdhgv419g9cnm7xgk45if624630s-typescript-5.8.3"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/8y2ckpw2l0arpw5hwkl5bc4mf4abgf12-typescript-5.8.3",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/8y2ckpw2l0arpw5hwkl5bc4mf4abgf12-typescript-5.8.3"
+        }
+      }
     }
   }
 }
