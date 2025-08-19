@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2016", // Or a newer version like "es2020" or "esnext"
+    "target": "esnext", // Or a newer version like "es2020" or "esnext"
     "module": "commonjs", // CommonJS is typical for Node.js applications
     "outDir": "./dist", // Where compiled JavaScript files will go
     "strict": true, // Enable all strict type-checking options (best practice!)
