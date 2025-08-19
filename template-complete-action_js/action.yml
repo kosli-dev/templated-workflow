@@ -10,11 +10,9 @@ inputs:
     description: The path to the JSON file containing the trail data.
     required: true
   status_to_find:
-    description:
-      The status to look for in the attestations (e.g., "MISSING", "COMPLETE").
+    description: The status to look for in the attestations (e.g., "MISSING", "COMPLETE").
     required: true
 
 runs:
   using: "node20"
-  main: entrypoint.js
-  
+  main: dist/entrypoint.js

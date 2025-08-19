@@ -1,41 +1,10 @@
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
+'use strict';
+
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.findAttestations = findAttestations;
+const tslib_1 = require("tslib");
 // src/checkAttestations.ts
-const fs = __importStar(require("fs")); // Node.js built-in file system module
+const fs = tslib_1.__importStar(require("fs")); // Node.js built-in file system module
 /**
  * Reads a JSON file, parses its content, and finds attestations
  * with a specified status.
@@ -58,7 +27,7 @@ function findAttestations(jsonFilePath, statusToFind) {
     // or long-running applications, you'd typically use asynchronous `fs.promises.readFile`
     // with `async/await` to avoid blocking the Node.js event loop.
     // `JSON.parse` is the built-in JavaScript function to convert a JSON string into a JavaScript object.
-    const fileContent = fs.readFileSync(jsonFilePath, 'utf8');
+    const fileContent = fs.readFileSync(jsonFilePath, "utf8");
     let data;
     try {
         data = JSON.parse(fileContent);
@@ -81,8 +50,8 @@ function findAttestations(jsonFilePath, statusToFind) {
     // This is very similar to Java's Stream API: `stream().filter(...).map(...).collect(...)`
     if (complianceStatus.attestations_statuses) {
         const directAttestations = complianceStatus.attestations_statuses
-            .filter(att => att.status === statusToFind)
-            .map(att => att.attestation_name);
+            .filter((att) => att.status === statusToFind)
+            .map((att) => att.attestation_name);
         foundAttestations.push(...directAttestations);
     }
     // --- Process Nested Attestations (Bash: `jq_query_nested`) ---
@@ -91,9 +60,9 @@ function findAttestations(jsonFilePath, statusToFind) {
     // then flattens the result into a new array. Perfect for handling nested arrays like `attestations_statuses`.
     if (complianceStatus.artifacts_statuses) {
         const nestedAttestations = Object.values(complianceStatus.artifacts_statuses)
-            .flatMap(artifact => artifact.attestations_statuses || [])
-            .filter(att => att.status === statusToFind)
-            .map(att => att.attestation_name);
+            .flatMap((artifact) => artifact.attestations_statuses || [])
+            .filter((att) => att.status === statusToFind)
+            .map((att) => att.attestation_name);
         foundAttestations.push(...nestedAttestations);
     }
     return foundAttestations;
@@ -119,7 +88,7 @@ if (require.main === module) {
         // --- Output and Exit Status (Bash: `if [ ${#found_attestations[@]} -gt 0 ]`) ---
         if (foundAttestations.length > 0) {
             console.log(`The following attestations have a '${statusToFind}' status:`);
-            foundAttestations.forEach(attestation => console.log(`- ${attestation}`));
+            foundAttestations.forEach((attestation) => console.log(`- ${attestation}`));
             // Bash exits with 1 if found. Mimicking that behavior.
             process.exit(1);
         }
@@ -139,3 +108,4 @@ if (require.main === module) {
         process.exit(1);
     }
 }
+//# sourceMappingURL=check-template-complete.js.map
