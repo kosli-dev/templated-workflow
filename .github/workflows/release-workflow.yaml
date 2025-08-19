@@ -48,7 +48,7 @@ jobs:
               run: node scripts/get-trail.js
 
             - name: Kosli complete action
-              uses: ./template-complete-action_js
+              uses: ./template-complete-action
               with:
                 json_file_path: trail.json
                 status_to_find: MISSING
