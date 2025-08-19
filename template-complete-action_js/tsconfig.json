@@ -6,6 +6,8 @@
     "strict": true, // Enable all strict type-checking options (best practice!)
     "esModuleInterop": true, // Allows default imports from modules with no default export
     "skipLibCheck": true, // Skip type checking of declaration files
-    "forceConsistentCasingInFileNames": true // Ensure consistent file casing
+    "forceConsistentCasingInFileNames": true, // Ensure consistent file casing
+    "importHelpers": false, // Don't use tslib
+    "noEmitHelpers": false // Emit helpers inline
   }
 }

@@ -1,7 +1,7 @@
 import * as core from "@actions/core";
 import { execSync } from "child_process";
 
-export async function run(): Promise<void> {
+function run(): void {
   try {
     const jsonFilePath = core.getInput("json_file_path", { required: true });
     const statusToFind = core.getInput("status_to_find", { required: true });

@@ -17,6 +17,7 @@ const config = [
       nodeResolve({ preferBuiltins: true }),
       commonjs(),
     ],
+    external: ["fs", "path"],
   },
   {
     input: "entrypoint.ts",
@@ -27,9 +28,13 @@ const config = [
     },
     plugins: [
       typescript({ exclude: ["**/__tests__", "**/*.test.ts"] }),
-      nodeResolve({ preferBuiltins: true }),
+      nodeResolve({
+        preferBuiltins: true,
+        exportConditions: ["node"],
+      }),
       commonjs(),
     ],
+    external: ["child_process"],
   },
 ];
 
