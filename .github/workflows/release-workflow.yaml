@@ -59,4 +59,4 @@ jobs:
                 status_to_find: MISSING
 
             - name: Kosli attest template complete
-              run: kosli attest generic --commit-url=${{env.COMMIT_URL}} --commit=${{ github.sha }} --name template-complete --attachments=trail.json
+              run: kosli attest generic --name template-complete --attachments=trail.json
