@@ -58,5 +58,10 @@ jobs:
                 json_file_path: trail.json
                 status_to_find: MISSING
 
+            # if failure
+            - name: Attest failure
+              if: ${{ failure() }}
+              run: kosli attest generic --name template-complete --attachments=trail.json --compliant false
+
             - name: Kosli attest template complete
               run: kosli attest generic --name template-complete --attachments=trail.json
