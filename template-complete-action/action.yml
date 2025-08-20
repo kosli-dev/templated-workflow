@@ -27,3 +27,13 @@ runs:
     - name: run check-template-complete-action
       run: check-template-complete.sh ${{ inputs.json_file_path }} ${{ inputs.status_to_find }}
       shell: bash
+
+    # if failure
+    - name: Attest failure
+      if: ${{ failure() }}
+      run: kosli attest generic --name template-complete --attachments=trail.json --compliant=false --description="template-complete control not satisfied"
+      shell: bash
+
+    - name: Kosli attest template complete
+      run: kosli attest generic --name template-complete --attachments=trail.json
+      shell: bash
