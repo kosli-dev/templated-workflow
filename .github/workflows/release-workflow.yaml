@@ -23,7 +23,7 @@ env:
   COMMIT_URL: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}
   KOSLI_API_TOKEN: ${{ secrets.KOSLI_API_KEY }} # Set the Kosli API token as a secret in your repository
   KOSLI_ORG: kosli-public
-  KOSLI_FLOW:  ${{ github.event.repository.name }}
+  KOSLI_FLOW:  ${{ github.event.repository.name }}-release
   KOSLI_TRAIL: ${{ github.sha }} # Use the full Git SHA for the trail
   
 jobs:
@@ -38,9 +38,13 @@ jobs:
 
             - name: setup-kosli-cli
               uses: kosli-dev/setup-cli-action@v2
-
+            - name: Begin trail
+              run: kosli begin trail ${{ github.sha }} --description "build number ${BUILD_NUMBER}"
             - name: Download container image
               run: docker pull ${{ inputs.docker-image }}
+
+            - name: Attest docker image
+              run: kosli attest artifact --artifact-type=docker --commit-url=${{env.COMMIT_URL}} --commit=${{ github.sha }} ${{ inputs.docker-image }} --build-url=${{ env.BUILD_URL }} --name=container
 
             - name: Get trail from Kosli
               env:
@@ -52,3 +56,6 @@ jobs:
               with:
                 json_file_path: trail.json
                 status_to_find: MISSING
+
+            - name: Kosli attest template complete
+              run: kosli attest generic --commit-url=${{env.COMMIT_URL}} --commit=${{ github.sha }} --name template-complete --attachments=trail.json
