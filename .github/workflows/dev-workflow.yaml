@@ -161,7 +161,7 @@ jobs:
       - name: Export workflow
         uses: corentinmusard/otel-cicd-action@v4
         with:
-          otlpEndpoint: https://ingress.europe-west4.gcp.dash0.com
+          otlpEndpoint: ingress.europe-west4.gcp.dash0.com:4317
           otlpHeaders: ${{ secrets.OTLP_HEADERS }}
           githubToken: ${{ secrets.GITHUB_TOKEN }}
     
