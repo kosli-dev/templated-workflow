@@ -20,6 +20,9 @@ jobs:
               with:
                 name: test-results
                 path: report.xml
+            # make the run fail
+            - name: Fail the run
+              run: exit 1
     otel-cicd-action:
         if: always()
         name: OpenTelemetry Export Trace
